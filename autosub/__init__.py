@@ -55,7 +55,7 @@ class FLACConverter(object): # pylint: disable=too-few-public-methods
     """
     Class for converting a region of an input audio or video file into a FLAC audio file
     """
-    def __init__(self, source_path, include_before=0.25, include_after=0.25):
+    def __init__(self, source_path, include_before=0.20, include_after=0.20):
         self.source_path = source_path
         self.include_before = include_before
         self.include_after = include_after
@@ -191,7 +191,7 @@ def extract_audio(filename, channels=1, rate=16000):
     return temp.name, rate
 
 
-def find_speech_regions(filename, frame_width=4096, min_region_size=0.5, max_region_size=6): # pylint: disable=too-many-locals
+def find_speech_regions(filename, frame_width=4096, min_region_size=0.5, max_region_size=30): # pylint: disable=too-many-locals
     """
     Perform voice activity detection on a given audio file.
     """
@@ -208,7 +208,7 @@ def find_speech_regions(filename, frame_width=4096, min_region_size=0.5, max_reg
         chunk = reader.readframes(frame_width)
         energies.append(audioop.rms(chunk, sample_width * n_channels))
 
-    threshold = percentile(energies, 0.2)
+    threshold = percentile(energies, 0.1)
 
     elapsed_time = 0
 
